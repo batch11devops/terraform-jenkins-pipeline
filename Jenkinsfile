@@ -1,39 +1,56 @@
 pipeline {
     agent any
+
     environment {
-        TERRAFORM_PATH = "/usr/local/bin/terraform"
+        TF_VERSION = "1.6.0"
     }
+
     stages {
-        stage('Checkout Code') {
-            steps {
-                git credentialsId: 'terra-job', url: 'https://github.com/batch11devops/terraform-jenkins-pipeline'
-            }
-        }
-        stage('Init') {
-            steps {
-                sh "${TERRAFORM_PATH} init"
-            }
-        }
-        stage('Validate') {
-            steps {
-                sh "${TERRAFORM_PATH} validate"
-            }
-        }
-        stage('Plan') {
-            steps {
-                sh "${TERRAFORM_PATH} plan"
-            }
-        }
-        stage('Apply') {
-            steps {
-                sh "${TERRAFORM_PATH} apply -auto-approve"
-            }
-        }
-        stage('Check Output') {
-            steps {
-                sh "${TERRAFORM_PATH} output"
-            }
-        }
+        stage('Clone Repo') {
+    steps {
+        git(
+url: 'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
+
+
+
+            credentialsId: 'github-pat'
+        )
     }
 }
+
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                sh 'terraform validate'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve tfplan'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Terraform successfully applied."
+            sh 'ls -la output'
+        }
+        failure {
+            echo "Pipeline failed."
+        }
+    }
 
