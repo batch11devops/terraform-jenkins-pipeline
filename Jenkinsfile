@@ -4,25 +4,25 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh 'terraform init'
+               sh '/usr/local/bin/terraform init'
             }
         }
 
         stage('Validate') {
             steps {
-                sh 'terraform validate'
+               sh '/usr/local/bin/terraform validate'
             }
         }
 
         stage('Plan') {
             steps {
-                sh 'terraform plan'
+               sh '/usr/local/bin/terraform plan' 
             }
         }
 
         stage('Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                sh '/usr/local/bin/terraform apply -auto-approve'
             }
         }
 
