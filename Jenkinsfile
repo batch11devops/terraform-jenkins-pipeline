@@ -1,38 +1,34 @@
 pipeline {
     agent any
 
-    environment {
-        TERRAFORM_PATH = "/usr/bin/terraform"
-    }
-
     stages {
         stage('Init') {
             steps {
-                sh '#!/bin/bash -l\n$TERRAFORM_PATH init'
+                sh '/usr/local/bin/terraform init'
             }
         }
 
         stage('Validate') {
             steps {
-                sh '#!/bin/bash -l\n$TERRAFORM_PATH validate'
+                sh '/usr/local/bin/terraform validate'
             }
         }
 
         stage('Plan') {
             steps {
-                sh '#!/bin/bash -l\n$TERRAFORM_PATH plan'
+                sh '/usr/local/bin/terraform plan'
             }
         }
 
         stage('Apply') {
             steps {
-                sh '#!/bin/bash -l\n$TERRAFORM_PATH apply -auto-approve'
+                sh '/usr/local/bin/terraform apply -auto-approve'
             }
         }
 
         stage('Check Output') {
             steps {
-                sh '''#!/bin/bash -l
+                sh '''
                 echo "Files inside /tmp/tf-dir1:"
                 ls -l /tmp/tf-dir1
                 echo "Files inside /tmp/tf-dir2:"
@@ -42,5 +38,3 @@ pipeline {
         }
     }
 }
-
-       
