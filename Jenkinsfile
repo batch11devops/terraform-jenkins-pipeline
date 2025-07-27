@@ -53,4 +53,4 @@ url: 'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
             echo "Pipeline failed."
         }
     }
-
+}
