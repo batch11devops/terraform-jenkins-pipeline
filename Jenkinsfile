@@ -1,40 +1,47 @@
 pipeline {
     agent any
 
+    environment {
+        TF_VAR_example = 'value'   // Optional: Set any environment variable if needed
+    }
+
     stages {
+        stage('Checkout Code') {
+            steps {
+                git credentialsId: 'terra-job', url: 'https://github.com/batch11devops/terraform-jenkins-pipeline', branch: 'main'
+            }
+        }
+
         stage('Init') {
             steps {
-                sh '/usr/local/bin/terraform init'
+                sh 'terraform init'
             }
         }
 
         stage('Validate') {
             steps {
-                sh '/usr/local/bin/terraform validate'
+                sh 'terraform validate'
             }
         }
 
         stage('Plan') {
             steps {
-                sh '/usr/local/bin/terraform plan'
+                sh 'terraform plan -out=tfplan'
             }
         }
 
         stage('Apply') {
             steps {
-                sh '/usr/local/bin/terraform apply -auto-approve'
+                input message: "Do you want to apply the changes?"
+                sh 'terraform apply tfplan'
             }
         }
 
         stage('Check Output') {
             steps {
-                sh '''
-                echo "Files inside /tmp/tf-dir1:"
-                ls -l /tmp/tf-dir1
-                echo "Files inside /tmp/tf-dir2:"
-                ls -l /tmp/tf-dir2
-                '''
+                sh 'terraform output'
             }
         }
     }
 }
+
