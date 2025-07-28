@@ -1,19 +1,11 @@
 pipeline {
     agent any
-
-    environment {
-        TF_VERSION = "1.6.0"
-    }
-
     stages {
         stage('Clone Repo') {
     steps {
         git(
-url: 'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
-
-
-
-            credentialsId: 'github-pat'
+url:'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
+            credentialsId: 'terra-job'
         )
     }
 }
@@ -41,16 +33,6 @@ url: 'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
             steps {
                 sh 'terraform apply -auto-approve tfplan'
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Terraform successfully applied."
-            sh 'ls -la output'
-        }
-        failure {
-            echo "Pipeline failed."
         }
     }
 
