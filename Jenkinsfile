@@ -4,8 +4,7 @@ pipeline {
         stage('Clone Repo') {
     steps {
         git(
-url:'https://github.com/batch11devops/terraform-jenkins-pipeline.git',
-            credentialsId: 'terra-job'
+            url:'https://github.com/batch11devops/terraform-jenkins-pipeline.git'
         )
     }
 }
